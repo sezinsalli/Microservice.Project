@@ -16,6 +16,8 @@ namespace CatalogAPI.Controllers
         {
             _courseService = courseService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var response= await _courseService.GetAllAsync();
@@ -31,6 +33,7 @@ namespace CatalogAPI.Controllers
 
         //[HttpGet("{userId}")]
         //api/courses/getaşşbyuserıd/4
+        [HttpGet]
         [Route("/api/[controller]/GetAllByUserId/{userId}")]
         public async Task<IActionResult> GetAllByUserId(string userId)
         {

@@ -29,7 +29,7 @@ namespace CatalogAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ICategoryService, CategoryService>();
-
+            services.AddScoped<ICourseService, CourseService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
 
@@ -39,8 +39,6 @@ namespace CatalogAPI
             {
                 return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
             });
-
-
 
             services.AddSwaggerGen(c =>
             {
