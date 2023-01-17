@@ -1,10 +1,13 @@
-﻿using MongoDB.Bson;
+﻿using CatalogAPI.Settings;
+using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace CatalogAPI.Models
 {
     public class Category
     {
+        
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
