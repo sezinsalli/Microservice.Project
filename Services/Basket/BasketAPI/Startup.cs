@@ -1,3 +1,4 @@
+using BasketAPI.Services;
 using BasketAPI.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,18 @@ namespace BasketAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
+
+            services.AddSingleton<RedisService>(sp=>
+            {
+                var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+
+                var redis = new RedisService(redisSettings.Host, redisSettings.Port);
+                redis.Connect();
+                return redis;
+            });
+
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BasketAPI", Version = "v1" });
