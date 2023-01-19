@@ -29,10 +29,14 @@ namespace BasketAPI.Controllers
             return CreateActionResultInstance(response);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> DeleteBasket(string userId)
         {
+            var response = await _basketService.Delete(userId);
 
-            return CreateActionResultInstance(await _basketService.Delete(userId));
+            return CreateActionResultInstance(response);
+
+            
         }
     }
 }
