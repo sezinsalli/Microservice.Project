@@ -4,3 +4,12 @@ admin1234567
 https://localhost:9443
 
 NACNVHHYGFFF
+
+
+CREATE TABLE Discount(
+Id serial PRIMARY KEY,
+UserId varchar(200) UNIQUE NOT NULL,
+Rate SMALLINT NOT NULL,
+Code varchar(50) NOT NULL,
+CreatedDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+)

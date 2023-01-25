@@ -1,3 +1,4 @@
+using DiscountApı.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,8 @@ namespace DiscountApı
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.AddScoped<IDiscountService, DiscountService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

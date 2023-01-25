@@ -20,9 +20,10 @@ namespace DiscountApı.Service
             _dbConnection = new NpgsqlConnection(_configuration.GetConnectionString("PostgreSql"));
         }
 
-        public Task<Response<NoContent>> Delete(int id)
+        public async Task<Response<NoContent>> Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var status = await _dbConnection.ExecuteAsync("Delete from discount where id=@Id", new { Id = id });
+            return status > 0 ? Response<NoContent>.Success(204) : Response<NoContent>.Fail("Discount not found.",404);
         }
 
         public async Task<Response<List<Discount>>> GetAll()
@@ -32,9 +33,18 @@ namespace DiscountApı.Service
             return Response<List<Discount>>.Success(discounts.ToList(), 200);
         }
 
-        public Task<Response<Discount>> GetByCodeAndUserId(string code, string userId)
+        public async Task<Response<Discount>> GetByCodeAndUserId(string code, string userId)
         {
-            throw new System.NotImplementedException();
+            var discounts = await _dbConnection.QueryAsync<Models.Discount>("Select *from discount where userid=@UserId and code=@Code", new {UserId=userId,Code=code});
+
+            var hasDiscount = discounts.FirstOrDefault();
+
+            if (hasDiscount==null)
+            {
+                return Response<Models.Discount>.Fail("Discount not found",404);
+
+            }
+            return Response<Models.Discount>.Success(hasDiscount, 200);
         }
 
         public async Task<Response<Discount>> GetById(int id)
