@@ -37,19 +37,37 @@ namespace DiscountApı.Service
             throw new System.NotImplementedException();
         }
 
-        public Task<Response<List<Discount>>> GetById(int id)
+        public async Task<Response<Discount>> GetById(int id)
         {
-            throw new System.NotImplementedException();
+            var discount = (await _dbConnection.QueryAsync<Models.Discount>("select*from discount whre id=@Id", new { id })).SingleOrDefault();
+            if (discount==null)
+            {
+                return Response<Discount>.Fail("Discount not found", 404);
+
+            }
+            return Response<Discount>.Success(discount, 200);
         }
 
-        public Task<Response<NoContent>> Save(Discount discount)
+        public async Task<Response<NoContent>> Save(Discount discount)
         {
-            throw new System.NotImplementedException();
+            var saveStatus = await _dbConnection.ExecuteAsync("Inser into discount (userid,rate,code) values (@userid,@rate,@code)",discount);
+            if (saveStatus>0)
+            {
+                return Response<NoContent>.Success(204);
+            }
+            return Response<NoContent>.Fail("An Error pccured while adding", 500);
         }
 
-        public Task<Response<NoContent>> Update(Discount discount)
+        public async Task<Response<NoContent>> Update(Discount discount)
         {
-            throw new System.NotImplementedException();
+            var status = await _dbConnection.ExecuteAsync("update discount set userid=@userId,code=@Code,rate=@Rate where id=@Id", new {Id=discount.Id,UserId=discount.UserId,Code=discount.Code,Rate=discount.Rate});
+            if (status>0)
+            {
+                return Response<NoContent>.Success(204);
+            }
+            return Response<NoContent>.Fail("A error occured while updating.", 500);
         }
+
+       
     }
 }
