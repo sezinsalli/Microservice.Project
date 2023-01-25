@@ -14,7 +14,7 @@ namespace DiscountApı.Service
     {
         private readonly IConfiguration _configuration;
         private readonly IDbConnection _dbConnection;
-        public DiscountService(IConfiguration configuration, IDbConnection dbConnection)
+        public DiscountService(IConfiguration configuration)
         {
             _configuration = configuration;
             _dbConnection = new NpgsqlConnection(_configuration.GetConnectionString("PostgreSql"));
@@ -49,7 +49,7 @@ namespace DiscountApı.Service
 
         public async Task<Response<Discount>> GetById(int id)
         {
-            var discount = (await _dbConnection.QueryAsync<Models.Discount>("select*from discount whre id=@Id", new { id })).SingleOrDefault();
+            var discount = (await _dbConnection.QueryAsync<Models.Discount>("select * from discount where id=@Id", new { id })).SingleOrDefault();
             if (discount==null)
             {
                 return Response<Discount>.Fail("Discount not found", 404);
@@ -60,7 +60,7 @@ namespace DiscountApı.Service
 
         public async Task<Response<NoContent>> Save(Discount discount)
         {
-            var saveStatus = await _dbConnection.ExecuteAsync("Inser into discount (userid,rate,code) values (@userid,@rate,@code)",discount);
+            var saveStatus = await _dbConnection.ExecuteAsync("Insert into discount (userid,rate,code) values (@UserId,@Rate,@Code)",discount);
             if (saveStatus>0)
             {
                 return Response<NoContent>.Success(204);
